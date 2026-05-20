@@ -1,0 +1,17 @@
+{
+  "name": "Control de Caja Da Vinci",
+  "short_name": "Caja DaVinci",
+  "start_url": "./index.html",
+  "display": "standalone",
+  "background_color": "#f6edcf",
+  "theme_color": "#8f291d",
+  "description": "Sistema de control de caja Centro Médico Da Vinci",
+  "icons": [
+    {
+      "src": "logo.jpg",
+      "sizes": "512x512",
+      "type": "image/jpeg",
+      "purpose": "any maskable"
+    }
+  ]
+}
