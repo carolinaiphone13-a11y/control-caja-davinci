@@ -10,6 +10,7 @@ window.DavinciCloud=(()=>{
   let lastRemoteUpdatedAt=0;
   let onRemoteChange=null;
   let saveTimer=null;
+  let lastError='';
 
   function hasConfig(){
     const c=window.DAVINCI_FIREBASE_CONFIG||{};
@@ -28,6 +29,7 @@ window.DavinciCloud=(()=>{
   function status(){
     if(!hasConfig())return 'Modo local';
     if(ready)return 'Nube activa';
+    if(lastError)return `Error nube: ${lastError}`;
     return 'Conectando nube';
   }
 
@@ -41,10 +43,12 @@ window.DavinciCloud=(()=>{
       await db.enablePersistence({synchronizeTabs:true}).catch(()=>{});
       const ref=db.collection('davinci').doc('control-caja');
       unsub=ref.onSnapshot(async snap=>{
+        lastError='';
         if(!snap.exists){
           const initial=stateProvider?stateProvider():loadLocal();
           if(initial)await save(initial,true);
           ready=true;
+          if(initial&&onRemoteChange)onRemoteChange(initial);
           return;
         }
         const data=snap.data()||{};
@@ -58,12 +62,16 @@ window.DavinciCloud=(()=>{
         }
       },err=>{
         console.warn('Firestore no disponible',err);
+        lastError=err.code||err.message||'Firestore';
         ready=false;
+        if(onRemoteChange&&stateProvider)onRemoteChange(stateProvider());
       });
       return true;
     }catch(err){
       console.warn('Firebase no disponible',err);
+      lastError=err.code||err.message||'Firebase';
       ready=false;
+      if(onRemoteChange&&stateProvider)onRemoteChange(stateProvider());
       return false;
     }
   }
@@ -97,3 +105,4 @@ window.DavinciCloud=(()=>{
 
   return {init,loadLocal,save,status,hasConfig};
 })();
+
