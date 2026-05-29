@@ -23,6 +23,9 @@ Reglas incluidas:
 - La app usa inicio anonimo automatico para evitar cuentas por usuario.
 
 Notas operativas:
-- Todos los datos se guardan en el documento Firestore davinci/control-caja.
-- Si dos usuarios editan al mismo tiempo, se conserva el ultimo guardado recibido.
+- La pantalla activa, el mes seleccionado y los formularios en edicion son locales por navegador.
+- Firebase solo sincroniza registros guardados: ventas, devoluciones, salidas y nomina.
+- Los folios se generan al presionar Guardar con contadores transaccionales en Firestore.
+- Los datos se guardan en subcolecciones bajo davinci/control-caja: sales, refunds, expenses y professionals.
+- Los reportes y centralizaciones se actualizan en tiempo real solo con registros confirmados.
 - Para mayor control futuro se recomienda agregar usuarios con correo, roles y auditoria por folio.
